@@ -68,4 +68,9 @@ Supprime les tables `wsb_*`, la configuration, les onglets et les images du blog
 
 ## Licence
 
-AFL-3.0 — © Websource. https://www.websource.fr
+Usage libre non commercial — © Websource (voir LICENSE.md). https://www.websource.fr
+
+
+## Compatibilité thèmes
+
+Testé sur PrestaShop 9.2 avec les thèmes Classic, Hummingbird et Warehouse (et thèmes enfants). Les templates du module peuvent être surchargés depuis le thème : `themes/<thème>/modules/<module>/views/templates/...`. Voir CHANGELOG.md pour le détail.

@@ -6,7 +6,7 @@
  * date_publish est librement modifiable : on peut antidater (date passée) ou programmer (date future).
  *
  * @author    Websource
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
+ * @license   Websource - usage libre non commercial (voir LICENSE.md)
  */
 
 if (!defined('_PS_VERSION_')) {

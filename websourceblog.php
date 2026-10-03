@@ -11,7 +11,7 @@
  * - Balisage schema.org (Blog, BlogPosting, BreadcrumbList), sitemap XML, canonical, Open Graph
  *
  * @author    Websource
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
+ * @license   Websource - usage libre non commercial (voir LICENSE.md)
  */
 
 if (!defined('_PS_VERSION_')) {
@@ -45,7 +45,7 @@ class WebsourceBlog extends Module
     {
         $this->name = 'websourceblog';
         $this->tab = 'front_office_features';
-        $this->version = '1.0.1';
+        $this->version = '1.1.0';
         $this->author = 'Websource';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -348,6 +348,27 @@ class WebsourceBlog extends Module
         }, $rows);
     }
 
+    /**
+     * Famille du thème actif (nom + thème parent) : 'hummingbird', 'warehouse', 'classic' ou 'other'
+     * (thème inconnu : comportement historique). Sert de classe de corps `wsb-theme-<famille>`.
+     */
+    public static function themeFamily()
+    {
+        $shop = Context::getContext()->shop;
+        $t = isset($shop->theme) ? $shop->theme : null;
+        if (!is_object($t) || !method_exists($t, 'getName')) {
+            return 'other';
+        }
+        $names = Tools::strtolower($t->getName() . ' ' . (method_exists($t, 'get') ? (string) $t->get('parent') : ''));
+        foreach (['hummingbird', 'warehouse', 'classic'] as $f) {
+            if (strpos($names, $f) !== false) {
+                return $f;
+            }
+        }
+
+        return 'other';
+    }
+
     // ------------------------------------------------------------------
     // Hooks front
     // ------------------------------------------------------------------
@@ -424,7 +445,7 @@ class WebsourceBlog extends Module
             $output .= $this->displayConfirmation(sprintf($this->l('%d image(s) régénérée(s).'), $n));
         }
 
-        return $output . $this->renderConfigForm();
+        return $output . $this->supportBlock() . $this->renderConfigForm();
     }
 
     private function renderConfigForm()
@@ -491,5 +512,35 @@ class WebsourceBlog extends Module
         }
 
         return $values;
+    }
+
+    /**
+     * Encart « accompagnement Websource » : uniquement dans le back-office, pour un super-administrateur
+     * connecté (jamais côté boutique ni dans les e-mails). Partial : views/templates/admin/websource_support.tpl
+     * (surchargeable). Seuls le nom du module, sa version, la version de PrestaShop et l'adresse du site
+     * sont transmis, dans l'URL du lien, au clic.
+     *
+     * @return string
+     */
+    public function supportBlock()
+    {
+        $employee = $this->context->employee;
+        if (!defined('_PS_ADMIN_DIR_') || !is_object($employee) || !$employee->id || !$employee->isSuperAdmin()) {
+            return '';
+        }
+        $site = Tools::getShopDomainSsl(true);
+        $base = 'https://www.websource.fr/contact?utm_source=' . rawurlencode($this->name)
+            . '&utm_medium=admin-module&utm_campaign=accompagnement'
+            . '&ws_module=' . rawurlencode($this->name)
+            . '&ws_mv=' . rawurlencode($this->version)
+            . '&ws_cms=prestashop'
+            . '&ws_cmsv=' . rawurlencode(_PS_VERSION_)
+            . '&ws_site=' . rawurlencode($site);
+        $this->context->smarty->assign(array(
+            'ws_support_contact' => $base,
+            'ws_support_rdv' => $base . '&utm_content=rdv',
+        ));
+
+        return $this->context->smarty->fetch($this->local_path . 'views/templates/admin/websource_support.tpl');
     }
 }

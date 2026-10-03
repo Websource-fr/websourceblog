@@ -3,7 +3,7 @@
  * Base commune des contrôleurs front du blog : meta SEO, canonical, pagination, fil d'Ariane, 404.
  *
  * @author    Websource
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
+ * @license   Websource - usage libre non commercial (voir LICENSE.md)
  */
 
 if (!defined('_PS_VERSION_')) {
@@ -36,6 +36,7 @@ abstract class WsbBaseFrontController extends ModuleFrontController
             $page['canonical'] = $this->wsb_canonical;
         }
         $page['body_classes']['page-websourceblog'] = true;
+        $page['body_classes']['wsb-theme-' . WebsourceBlog::themeFamily()] = true;
 
         return $page;
     }

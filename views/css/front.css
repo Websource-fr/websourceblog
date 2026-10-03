@@ -148,3 +148,7 @@ body.page-websourceblog .page-header h1::after { content: ""; position: absolute
 .wsb-play { align-items: flex-end; justify-content: flex-end; padding: 1rem 1.1rem; }
 .wsb-play-btn { width: 64px; height: 64px; background: rgba(250, 246, 236, .82); }
 .wsb-play-btn svg { width: 26px; height: 26px; margin-left: 4px; }
+
+/* ---- Compatibilité thèmes (Classic / Hummingbird / Warehouse) ---- */
+.wsb-content { color: var(--wsb-ink); }
+.wsb-theme-hummingbird .wsb-content a { color: var(--wsb-accent) !important; }
